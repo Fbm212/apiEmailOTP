@@ -17,9 +17,8 @@
             box-sizing: border-box;
         }
 
-        /* CSS Variables for Theming */
+        /* Dark theme (default) */
         :root {
-            /* Dark theme (default) */
             --md-primary: #84c4ff;
             --md-on-primary: #003257;
             --md-primary-container: #004a77;
@@ -38,23 +37,16 @@
             --md-error: #ffb4ab;
             --md-on-error: #690005;
             
-            /* Spacing */
             --space-xs: 4px;
             --space-sm: 8px;
             --space-md: 16px;
             --space-lg: 24px;
             --space-xl: 32px;
             
-            /* Border radius */
             --radius-sm: 8px;
             --radius-md: 16px;
             --radius-lg: 28px;
             --radius-xl: 36px;
-            
-            /* Shadows */
-            --shadow-1: 0 2px 4px rgba(0,0,0,0.3);
-            --shadow-2: 0 4px 8px rgba(0,0,0,0.4);
-            --shadow-3: 0 8px 16px rgba(0,0,0,0.5);
         }
 
         /* Light theme */
@@ -74,8 +66,6 @@
             --md-background: #ffffff;
             --md-on-background: #1a1c1e;
             --md-outline: #74777f;
-            --md-error: #ba1a1a;
-            --md-on-error: #ffffff;
         }
 
         body {
@@ -97,7 +87,6 @@
             flex-direction: column;
             padding: var(--space-md);
             padding-bottom: 80px;
-            position: relative;
         }
 
         /* Header */
@@ -113,16 +102,10 @@
             display: flex;
             align-items: center;
             gap: var(--space-md);
-            cursor: pointer;
             padding: var(--space-xs) var(--space-sm);
             border-radius: var(--radius-xl);
             background-color: var(--md-surface-variant);
-            transition: all 0.2s ease;
             min-width: 160px;
-        }
-
-        .user-profile:hover {
-            background-color: var(--md-outline);
         }
 
         .profile-avatar {
@@ -149,7 +132,6 @@
         .profile-info {
             display: flex;
             flex-direction: column;
-            padding-right: var(--space-sm);
         }
 
         .profile-name {
@@ -178,7 +160,6 @@
             background-color: var(--md-surface-variant);
             color: var(--md-on-surface-variant);
             transition: all 0.2s ease;
-            box-shadow: var(--shadow-1);
         }
 
         .theme-toggle:hover {
@@ -206,7 +187,7 @@
             background-color: var(--md-surface);
             border-radius: var(--radius-lg);
             padding: var(--space-lg);
-            box-shadow: var(--shadow-2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             margin-bottom: var(--space-lg);
         }
 
@@ -231,7 +212,6 @@
             text-transform: none;
             padding: var(--space-xs) var(--space-sm);
             border-radius: var(--radius-sm);
-            transition: background-color 0.2s ease;
         }
 
         .refresh-email:hover {
@@ -261,7 +241,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             max-width: 70%;
-            word-break: break-all;
         }
 
         .copy-btn {
@@ -298,15 +277,13 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: var(--shadow-2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             margin-bottom: var(--space-md);
-            position: relative;
-            overflow: hidden;
         }
 
         .otp-button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-3);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
         }
 
         .otp-button:disabled {
@@ -348,7 +325,7 @@
             background-color: var(--md-surface);
             border-radius: var(--radius-md);
             padding: var(--space-md);
-            box-shadow: var(--shadow-1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -357,7 +334,7 @@
 
         .history-item:hover {
             transform: translateX(5px);
-            box-shadow: var(--shadow-2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .history-item-content {
@@ -424,14 +401,12 @@
             display: flex;
             justify-content: space-around;
             padding: var(--space-sm) var(--space-md);
-            box-shadow: var(--shadow-3);
+            box-shadow: 0 -4px 8px rgba(0,0,0,0.3);
             border-top-left-radius: var(--radius-lg);
             border-top-right-radius: var(--radius-lg);
             max-width: 600px;
             margin: 0 auto;
             width: 100%;
-            backdrop-filter: blur(10px);
-            background-color: rgba(var(--md-surface-rgb), 0.9);
         }
 
         .nav-item {
@@ -486,7 +461,7 @@
             color: var(--md-on-surface);
             padding: var(--space-md) var(--space-xl);
             border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-3);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
             z-index: 1000;
             transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             max-width: 300px;
@@ -497,75 +472,6 @@
 
         .toast.show {
             transform: translateX(-50%) translateY(0);
-        }
-
-        /* Login Modal */
-        .login-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, var(--md-background), var(--md-surface));
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: var(--space-xl);
-            backdrop-filter: blur(10px);
-            transition: opacity 0.3s ease;
-        }
-
-        .login-modal.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .login-modal h2 {
-            font-size: 32px;
-            color: var(--md-primary);
-            margin-bottom: var(--space-sm);
-        }
-
-        .login-modal p {
-            color: var(--md-on-surface-variant);
-            margin-bottom: var(--space-lg);
-        }
-
-        .telegram-login-container {
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Error Display */
-        .error-message {
-            background-color: var(--md-error);
-            color: var(--md-on-error);
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            margin: var(--space-md) 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            animation: slideIn 0.3s ease;
-        }
-
-        .error-message.hidden {
-            display: none;
-        }
-
-        .error-close {
-            cursor: pointer;
-            font-size: 20px;
-            opacity: 0.8;
-            transition: opacity 0.2s ease;
-        }
-
-        .error-close:hover {
-            opacity: 1;
         }
 
         /* Progress Bar */
@@ -587,41 +493,20 @@
 
         /* Responsive */
         @media (max-width: 480px) {
-            .app-container {
-                padding: var(--space-sm);
-                padding-bottom: 80px;
-            }
-            
-            .email-text {
-                font-size: 15px;
-                max-width: 60%;
-            }
-            
-            .profile-name {
-                max-width: 100px;
-            }
-            
             .profile-info {
                 display: none;
             }
-            
             .user-profile {
                 min-width: auto;
-                padding: var(--space-xs);
+            }
+            .email-text {
+                font-size: 15px;
+                max-width: 60%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Login Modal -->
-    <div id="loginModal" class="login-modal">
-        <h2>📧 Get Api Email</h2>
-        <p>Login with Telegram to continue</p>
-        <div id="telegramLoginContainer" class="telegram-login-container">
-            <!-- Telegram widget will be loaded here -->
-        </div>
-    </div>
-
     <div class="app-container">
         <!-- Header -->
         <header class="header">
@@ -630,20 +515,14 @@
                     <span id="avatarInitial">📧</span>
                 </div>
                 <div class="profile-info">
-                    <span class="profile-name" id="profileName">Not Logged In</span>
-                    <span class="profile-id" id="profileId">Tap to login</span>
+                    <span class="profile-name" id="profileName">Telegram User</span>
+                    <span class="profile-id" id="profileId">Loading...</span>
                 </div>
             </div>
             <div class="theme-toggle" id="themeToggle">
                 <span class="material-symbols-outlined">dark_mode</span>
             </div>
         </header>
-
-        <!-- Error Display -->
-        <div id="errorDisplay" class="error-message hidden">
-            <span id="errorText"></span>
-            <span class="error-close" id="closeError">&times;</span>
-        </div>
 
         <!-- Progress Bar -->
         <div class="progress-bar" id="progressBar" style="display: none;">
@@ -663,19 +542,19 @@
                         </span>
                     </div>
                     <div class="email-display">
-                        <span class="email-text" id="emailDisplay">--</span>
+                        <span class="email-text" id="emailDisplay">Loading email...</span>
                         <div class="copy-btn" id="copyEmailBtn" title="Copy Email">
                             <span class="material-symbols-outlined">content_copy</span>
                         </div>
                     </div>
                     
-                    <button class="otp-button" id="getOtpBtn" disabled>
+                    <button class="otp-button" id="getOtpBtn">
                         <span id="otpBtnText">🔑 Get OTP</span>
                         <span id="otpBtnSpinner" class="loading-spinner" style="display: none;"></span>
                     </button>
                     
                     <div class="otp-output-container">
-                        <span class="otp-placeholder" id="otpDisplay">No OTP yet</span>
+                        <span class="otp-placeholder" id="otpDisplay">Click Get OTP to check</span>
                         <div class="copy-btn" id="copyOtpBtn" title="Copy OTP">
                             <span class="material-symbols-outlined">content_copy</span>
                         </div>
@@ -711,8 +590,7 @@
     <script>
         // ==================== Configuration ====================
         const CONFIG = {
-            BOT_TOKEN: '8483851822:AAGE-vrAUN7DM3P0MTS2Lg4paiLke7hlALk',
-            BOT_USERNAME: '@GetApiMailbot', // Your bot username
+            BOT_TOKEN: '8410136829:AAH35Yr9SXdAqIFWL2JETFQjZgwCJODW2Ko',
             API_KEY: 'mtienv25102025',
             API_BASE: 'http://api.mtien.online/public/GetMailCode.aspx',
             
@@ -724,6 +602,16 @@
             ]
         };
 
+        // ==================== Telegram WebApp Init ====================
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        
+        // Initialize Telegram WebApp
+        if (tg) {
+            tg.ready();
+            tg.expand(); // Expand to full height
+            tg.disableVerticalSwipes(); // Disable swipes
+        }
+
         // ==================== App State ====================
         const App = {
             user: null,
@@ -731,48 +619,18 @@
             currentOtp: '',
             theme: localStorage.getItem('theme') || 'dark',
             history: JSON.parse(localStorage.getItem('otpHistory') || '[]'),
-            isLoading: false,
             
-            // Save state
             saveHistory() {
                 localStorage.setItem('otpHistory', JSON.stringify(this.history));
             },
             
             saveTheme() {
                 localStorage.setItem('theme', this.theme);
-            },
-            
-            saveUser() {
-                if (this.user) {
-                    localStorage.setItem('telegramUser', JSON.stringify(this.user));
-                }
-            },
-            
-            loadUser() {
-                const saved = localStorage.getItem('telegramUser');
-                if (saved) {
-                    try {
-                        this.user = JSON.parse(saved);
-                        return true;
-                    } catch (e) {
-                        return false;
-                    }
-                }
-                return false;
-            },
-            
-            logout() {
-                this.user = null;
-                localStorage.removeItem('telegramUser');
-                updateUIForUser(false);
-                showLoginModal();
             }
         };
 
         // ==================== DOM Elements ====================
         const Elements = {
-            loginModal: document.getElementById('loginModal'),
-            userProfile: document.getElementById('userProfile'),
             profileName: document.getElementById('profileName'),
             profileId: document.getElementById('profileId'),
             profileAvatar: document.getElementById('profileAvatar'),
@@ -792,90 +650,61 @@
             historySection: document.getElementById('historySection'),
             historyContainer: document.getElementById('historyContainer'),
             toast: document.getElementById('toast'),
-            errorDisplay: document.getElementById('errorDisplay'),
-            errorText: document.getElementById('errorText'),
-            closeError: document.getElementById('closeError'),
             progressBar: document.getElementById('progressBar'),
             progressFill: document.getElementById('progressFill')
         };
 
-        // ==================== Telegram Login ====================
-        function initTelegramLogin() {
-            const container = document.getElementById('telegramLoginContainer');
-            
-            // Clear container
-            container.innerHTML = '';
-            
-            // Create script for Telegram widget
-            const script = document.createElement('script');
-            script.async = true;
-            script.src = 'https://telegram.org/js/telegram-widget.js?22';
-            script.setAttribute('data-telegram-login', CONFIG.BOT_USERNAME);
-            script.setAttribute('data-size', 'large');
-            script.setAttribute('data-radius', '10');
-            script.setAttribute('data-request-access', 'write');
-            script.setAttribute('data-onauth', 'onTelegramAuth(user)');
-            
-            container.appendChild(script);
+        // ==================== Telegram User Data ====================
+        function loadTelegramUser() {
+            // Try to get user from Telegram WebApp
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const user = tg.initDataUnsafe.user;
+                console.log('Telegram user loaded:', user);
+                
+                // Update profile with Telegram data
+                updateUserProfile(user);
+                
+                // Start loading email
+                fetchNewEmail();
+                
+                return true;
+            } else {
+                console.log('No Telegram user found, using mock data');
+                
+                // For development/demo - use mock data
+                const mockUser = {
+                    id: 123456789,
+                    first_name: 'Test',
+                    last_name: 'User',
+                    username: 'testuser',
+                    language_code: 'en'
+                };
+                
+                updateUserProfile(mockUser);
+                fetchNewEmail();
+                
+                return false;
+            }
         }
 
-        // Telegram auth callback (MUST be global)
-        window.onTelegramAuth = function(user) {
-            console.log('Telegram auth success:', user);
-            
-            // Save user
+        function updateUserProfile(user) {
             App.user = user;
-            App.saveUser();
             
-            // Hide modal
-            Elements.loginModal.classList.add('hidden');
-            
-            // Update UI
-            updateUIForUser(true);
-            
-            // Update profile
-            Elements.profileName.textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            // Set name
+            const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            Elements.profileName.textContent = fullName;
             Elements.profileId.textContent = `ID: ${user.id}`;
             
+            // Set avatar
             if (user.photo_url) {
                 Elements.profileAvatar.innerHTML = `<img src="${user.photo_url}" alt="${user.first_name}">`;
             } else {
-                Elements.avatarInitial.textContent = (user.first_name || 'U').charAt(0).toUpperCase();
+                const initial = (user.first_name || 'U').charAt(0).toUpperCase();
+                Elements.avatarInitial.textContent = initial;
             }
             
-            // Enable buttons
+            // Enable button
             Elements.getOtpBtn.disabled = false;
-            
-            // Load email
-            fetchNewEmail();
-            
-            // Show welcome message
-            showToast(`Welcome ${user.first_name}! 🎉`);
-        };
-
-        // Show login modal
-        function showLoginModal() {
-            Elements.loginModal.classList.remove('hidden');
-            initTelegramLogin();
-        }
-
-        // Hide login modal
-        function hideLoginModal() {
-            Elements.loginModal.classList.add('hidden');
-        }
-
-        // Update UI based on login state
-        function updateUIForUser(isLoggedIn) {
-            if (!isLoggedIn) {
-                Elements.profileName.textContent = 'Not Logged In';
-                Elements.profileId.textContent = 'Tap to login';
-                Elements.avatarInitial.textContent = '📧';
-                Elements.profileAvatar.innerHTML = '<span id="avatarInitial">📧</span>';
-                Elements.getOtpBtn.disabled = true;
-                Elements.emailDisplay.textContent = '--';
-                Elements.otpDisplay.textContent = 'No OTP yet';
-                Elements.otpDisplay.className = 'otp-placeholder';
-            }
         }
 
         // ==================== Theme Management ====================
@@ -885,9 +714,14 @@
             icon.textContent = theme === 'dark' ? 'dark_mode' : 'light_mode';
             App.theme = theme;
             App.saveTheme();
+            
+            // Sync with Telegram theme if available
+            if (tg) {
+                tg.setHeaderColor(theme === 'dark' ? '#0e0e0e' : '#ffffff');
+                tg.setBackgroundColor(theme === 'dark' ? '#0e0e0e' : '#ffffff');
+            }
         }
 
-        // Toggle theme
         Elements.themeToggle.addEventListener('click', () => {
             setTheme(App.theme === 'dark' ? 'light' : 'dark');
         });
@@ -923,12 +757,6 @@
         }
 
         async function fetchNewEmail() {
-            if (!App.user) {
-                showError('Please login first');
-                return;
-            }
-
-            App.isLoading = true;
             Elements.emailDisplay.textContent = 'Loading...';
             showProgress(30);
 
@@ -944,24 +772,22 @@
                 if (cleanEmail && cleanEmail.includes('@')) {
                     App.currentEmail = cleanEmail;
                     Elements.emailDisplay.textContent = cleanEmail;
-                    showToast('Email ready!');
                 } else {
                     throw new Error('Invalid email');
                 }
             } catch (error) {
                 Elements.emailDisplay.textContent = 'Failed to load';
-                showError('Failed to get email. Please try again.');
+                showToast('Failed to get email');
                 console.error('Email error:', error);
             } finally {
-                App.isLoading = false;
                 showProgress(100);
                 setTimeout(() => hideProgress(), 500);
             }
         }
 
         async function fetchOTP() {
-            if (!App.user || !App.currentEmail) {
-                showError('Email not available');
+            if (!App.currentEmail) {
+                showToast('No email available');
                 return;
             }
 
@@ -999,7 +825,7 @@
                 }
             } catch (error) {
                 Elements.otpDisplay.textContent = 'Error';
-                showError('Failed to fetch OTP');
+                showToast('Failed to fetch OTP');
                 console.error('OTP error:', error);
             } finally {
                 Elements.otpBtnText.style.display = 'inline';
@@ -1115,15 +941,6 @@
             }, 2000);
         }
 
-        function showError(message) {
-            Elements.errorText.textContent = message;
-            Elements.errorDisplay.classList.remove('hidden');
-            
-            setTimeout(() => {
-                Elements.errorDisplay.classList.add('hidden');
-            }, 5000);
-        }
-
         function showProgress(percent) {
             Elements.progressBar.style.display = 'block';
             Elements.progressFill.style.width = percent + '%';
@@ -1135,17 +952,6 @@
         }
 
         // ==================== Event Listeners ====================
-        Elements.userProfile.addEventListener('click', () => {
-            if (App.user) {
-                // Show user info or logout option
-                if (confirm(`Logged in as ${App.user.first_name}\nClick OK to logout`)) {
-                    App.logout();
-                }
-            } else {
-                showLoginModal();
-            }
-        });
-
         Elements.copyEmailBtn.addEventListener('click', () => {
             if (App.currentEmail) {
                 copyToClipboard(App.currentEmail, 'Email copied!');
@@ -1155,7 +961,7 @@
         });
 
         Elements.copyOtpBtn.addEventListener('click', () => {
-            if (App.currentOtp && App.currentOtp.length > 0 && !App.currentOtp.includes('No')) {
+            if (App.currentOtp && !App.currentOtp.includes('No') && !App.currentOtp.includes('Error')) {
                 copyToClipboard(App.currentOtp, 'OTP copied!');
                 Elements.copyOtpBtn.classList.add('copied');
                 setTimeout(() => Elements.copyOtpBtn.classList.remove('copied'), 500);
@@ -1166,9 +972,6 @@
 
         Elements.getOtpBtn.addEventListener('click', fetchOTP);
         Elements.refreshEmail.addEventListener('click', fetchNewEmail);
-        Elements.closeError.addEventListener('click', () => {
-            Elements.errorDisplay.classList.add('hidden');
-        });
 
         // Navigation
         Elements.navHome.addEventListener('click', () => {
@@ -1194,14 +997,8 @@
             // Load history
             renderHistory();
             
-            // Check for saved user
-            if (App.loadUser()) {
-                // User found, auto login
-                window.onTelegramAuth(App.user);
-            } else {
-                // Show login modal
-                showLoginModal();
-            }
+            // Load Telegram user (auto-login)
+            loadTelegramUser();
         }
 
         // Start the app
