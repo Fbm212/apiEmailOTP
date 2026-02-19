@@ -13,6 +13,7 @@
     <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="GetApiEmailBot" data-size="large" data-radius="10" data-request-access="write"></script>
     
     <style>
+        /* Same CSS as before */
         * {
             margin: 0;
             padding: 0;
@@ -466,6 +467,26 @@
         .login-overlay.hidden {
             display: none;
         }
+
+        /* Error Message */
+        .error-message {
+            color: #ff8a8a;
+            text-align: center;
+            padding: var(--space-md);
+            background-color: rgba(255, 0, 0, 0.1);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+        }
+
+        .retry-btn {
+            background-color: var(--md-primary);
+            color: var(--md-on-primary);
+            border: none;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            margin-top: var(--space-sm);
+        }
     </style>
 </head>
 <body>
@@ -517,6 +538,9 @@
                             <span class="material-symbols-outlined">content_copy</span>
                         </div>
                     </div>
+                    
+                    <!-- Error message container -->
+                    <div id="errorContainer" class="error-message" style="display: none;"></div>
                 </div>
             </div>
 
@@ -545,10 +569,17 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
+    <!-- CORS Proxy Solution -->
     <script>
         // ==================== Configuration ====================
         const CONFIG = {
             BOT_TOKEN: '8410136829:AAH35Yr9SXdAqIFWL2JETFQjZgwCJODW2Ko',
+            // Using multiple CORS proxies for reliability
+            PROXIES: [
+                'https://api.allorigins.win/raw?url=',
+                'https://cors-anywhere.herokuapp.com/',
+                'https://corsproxy.io/?'
+            ],
             EMAIL_API: 'http://api.mtien.online/public/GetMailCode.aspx?key=mtienv25102025&act=get-mail',
             OTP_API: 'http://api.mtien.online/public/GetMailCode.aspx?key=mtienv25102025&email=',
             TELEGRAM_BOT_API: 'https://api.telegram.org/bot'
@@ -560,7 +591,8 @@
             currentEmail: '',
             currentOtp: '',
             theme: 'dark',
-            history: []
+            history: [],
+            currentProxyIndex: 0
         };
 
         // Load state from localStorage
@@ -594,7 +626,8 @@
             homeSection: document.getElementById('homeSection'),
             historySection: document.getElementById('historySection'),
             historyContainer: document.getElementById('historyContainer'),
-            toast: document.getElementById('toast')
+            toast: document.getElementById('toast'),
+            errorContainer: document.getElementById('errorContainer')
         };
 
         // ==================== Telegram Login ====================
@@ -646,18 +679,57 @@
         // Initialize theme
         setTheme(appState.theme);
 
-        // ==================== API Functions ====================
-        async function fetchNewEmail() {
+        // ==================== API Functions with CORS Proxy ====================
+        async function fetchWithProxy(url, retryCount = 0) {
+            // Try different proxies if one fails
+            const proxyIndex = (appState.currentProxyIndex + retryCount) % CONFIG.PROXIES.length;
+            const proxyUrl = CONFIG.PROXIES[proxyIndex] + encodeURIComponent(url);
+            
             try {
-                const response = await fetch(CONFIG.EMAIL_API);
-                const email = await response.text();
-                appState.currentEmail = email.trim();
-                elements.emailDisplay.textContent = appState.currentEmail;
-                return email;
+                const response = await fetch(proxyUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'text/plain, text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const text = await response.text();
+                return text.trim();
+            } catch (error) {
+                console.error(`Proxy ${proxyIndex} failed:`, error);
+                
+                // Try next proxy
+                if (retryCount < CONFIG.PROXIES.length - 1) {
+                    return fetchWithProxy(url, retryCount + 1);
+                }
+                
+                // If all proxies fail, throw error
+                throw new Error('All proxies failed. Please try again later.');
+            }
+        }
+
+        async function fetchNewEmail() {
+            elements.emailDisplay.textContent = 'Loading email...';
+            hideError();
+            
+            try {
+                const email = await fetchWithProxy(CONFIG.EMAIL_API);
+                
+                if (email && email.includes('@')) {
+                    appState.currentEmail = email;
+                    elements.emailDisplay.textContent = appState.currentEmail;
+                } else {
+                    throw new Error('Invalid email format');
+                }
             } catch (error) {
                 console.error('Failed to fetch email:', error);
                 elements.emailDisplay.textContent = 'Failed to load email';
-                showToast('Failed to load email. Please try again.');
+                showError('Failed to load email. ' + error.message);
             }
         }
 
@@ -673,23 +745,22 @@
             elements.getOtpBtn.disabled = true;
             elements.otpDisplay.textContent = '--';
             elements.otpDisplay.className = 'otp-text';
+            hideError();
 
             try {
                 const url = CONFIG.OTP_API + encodeURIComponent(appState.currentEmail);
-                const response = await fetch(url);
-                const otp = await response.text();
-                const cleanedOtp = otp.trim();
+                const otp = await fetchWithProxy(url);
 
-                if (cleanedOtp && !cleanedOtp.includes('error') && !cleanedOtp.includes('fail')) {
-                    appState.currentOtp = cleanedOtp;
-                    elements.otpDisplay.textContent = cleanedOtp;
+                if (otp && !otp.toLowerCase().includes('error') && !otp.toLowerCase().includes('fail') && otp.length > 0) {
+                    appState.currentOtp = otp;
+                    elements.otpDisplay.textContent = otp;
                     elements.otpDisplay.className = 'otp-text';
                     
                     // Add to history
-                    addToHistory(appState.currentEmail, cleanedOtp);
+                    addToHistory(appState.currentEmail, otp);
                     
                     // Send Telegram notification
-                    sendTelegramNotification(appState.currentEmail, cleanedOtp);
+                    sendTelegramNotification(appState.currentEmail, otp);
                     
                     showToast('OTP received successfully!');
                 } else {
@@ -701,7 +772,7 @@
                 console.error('Failed to fetch OTP:', error);
                 elements.otpDisplay.textContent = 'Error fetching OTP';
                 elements.otpDisplay.className = 'otp-placeholder';
-                showToast('Failed to fetch OTP. Please try again.');
+                showError('Failed to fetch OTP. ' + error.message);
             } finally {
                 // Hide loading state
                 elements.otpBtnText.style.display = 'inline';
@@ -730,6 +801,7 @@
             const message = `🔔 New OTP Received!\n\n📧 Email: ${email}\n🔑 OTP Code: \`${otp}\`\n📨 From: Email Service\n📒 Subject: OTP Code\n📅 Date/Time: ${formattedDate}\n\n✅ OTP Successfully received and verified.`;
 
             try {
+                // Telegram API doesn't need CORS proxy
                 const response = await fetch(`${CONFIG.TELEGRAM_BOT_API}${CONFIG.BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: {
@@ -749,6 +821,27 @@
             } catch (error) {
                 console.error('Failed to send Telegram notification:', error);
             }
+        }
+
+        // ==================== Error Handling ====================
+        function showError(message) {
+            elements.errorContainer.textContent = message;
+            elements.errorContainer.style.display = 'block';
+            
+            // Add retry button for email fetch errors
+            if (message.includes('email')) {
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'retry-btn';
+                retryBtn.textContent = 'Retry';
+                retryBtn.onclick = fetchNewEmail;
+                elements.errorContainer.appendChild(document.createElement('br'));
+                elements.errorContainer.appendChild(retryBtn);
+            }
+        }
+
+        function hideError() {
+            elements.errorContainer.style.display = 'none';
+            elements.errorContainer.innerHTML = '';
         }
 
         // ==================== History Management ====================
@@ -874,10 +967,9 @@
         });
 
         // ==================== Initialization ====================
-        // Load email if user is already logged in (for development)
+        // For demo purposes, create a mock user after 2 seconds if not logged in
         setTimeout(() => {
             if (!appState.user && !elements.loginOverlay.classList.contains('hidden')) {
-                // For demo purposes, create a mock user
                 const mockUser = {
                     id: 123456789,
                     first_name: 'Test',
@@ -890,6 +982,9 @@
 
         // Initial history render
         renderHistory();
+
+        // Add manual retry for email fetch
+        window.retryEmailFetch = fetchNewEmail;
     </script>
 </body>
 </html>
